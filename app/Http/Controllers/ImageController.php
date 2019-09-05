@@ -38,22 +38,12 @@ class ImageController extends Controller
 
         $image = $request->file('image');
 
-        //Check and Make Img Dir.
-        if (!Storage::disk('public')->exists('images')) {
-            Storage::disk('public')->makeDirectory('images');
-        }
-
-        //Check and Make Img Small Dir.
-        if (!Storage::disk('public')->exists('imagesSmall')) {
-            Storage::disk('public')->makeDirectory('imagesSmall');
-        }
-
         //Unique Name
         $imageName = time() . '_' . $image->getClientOriginalName();
 
         //Img Path
-        $imagePath = 'storage/images/';
-        $imageSmallPath = 'storage/imagesSmall/';
+        $imagePath = 'storage/image/';
+        $imageSmallPath = 'storage/imageSmall/';
 
         //Img URL
         $imageUrl = $imagePath . $imageName;
@@ -71,7 +61,6 @@ class ImageController extends Controller
 
         return redirect()->route('image.index')
             ->with(['message' => 'Image Uploaded Successfully']);
-
     }
 
 
@@ -103,8 +92,8 @@ class ImageController extends Controller
             $imageName = time() . '_' . $image->getClientOriginalName();
 
             //Img Path
-            $imagePath = 'storage/images/';
-            $imageSmallPath = 'storage/imagesSmall/';
+            $imagePath = 'storage/image/';
+            $imageSmallPath = 'storage/imageSmall/';
 
             //Img URL
             $imageUrl = $imagePath . $imageName;
@@ -127,6 +116,7 @@ class ImageController extends Controller
         } else {
             return redirect('/image')->with('message', 'U Didnt Chang Any Image');
         }
+
 
 
     }

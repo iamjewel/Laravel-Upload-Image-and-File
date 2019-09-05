@@ -29,16 +29,11 @@ class FileController extends Controller
             'file' => 'required',
         ]);
 
-        //Check and Make File Dir.
-        if (!Storage::disk('public')->exists('files')) {
-            Storage::disk('public')->makeDirectory('files');
-        }
-
         //Unique Name
         $fileName = time() . '.' . request()->file->getClientOriginalExtension();
 
         //File URL
-        $fileUrl = request()->file->move(('storage/files'), $fileName);
+        $fileUrl = request()->file->move(('storage/file'), $fileName);
 
         $files = new UploadFile();
 
@@ -49,6 +44,7 @@ class FileController extends Controller
 
         return redirect()->route('file.index')
             ->with(['message' => 'File Saved Successfully']);
+
     }
 
 
@@ -72,13 +68,15 @@ class FileController extends Controller
             'file_name' => 'required',
         ]);
 
-        if ($request->file) {
+        $file = $request->file('file');
+
+        if (isset($file)) {
+
             //Unique Name
             $fileName = time() . '.' . request()->file->getClientOriginalExtension();
 
             //File URL
-            $fileUrl = request()->file->move(('storage/files'), $fileName);
-
+            $fileUrl = request()->file->move(('storage/file'), $fileName);
             $file = UploadFile::find($id);
 
             unlink($file->file);
@@ -87,21 +85,18 @@ class FileController extends Controller
             $file->file = $fileUrl;
             $file->save();
 
-
             return redirect()->route('file.index')
                 ->with(['message' => 'File Updated Successfully']);
-
         } else {
 
             $file = UploadFile::find($id);
-
             $file->file_name = $request->file_name;
+
             $file->save();
 
             return redirect()->route('file.index')
                 ->with(['message' => 'File Updated Successfully']);
         }
-
     }
 
 
